@@ -6,7 +6,7 @@ import (
 )
 
 type todo struct {
-	Id        string
+	Id        int
 	Task      string
 	Completed string
 }
@@ -38,10 +38,10 @@ func saveTodos(todos []todo) {
 	}
 }
 
-func delTodo(todos []todo, id string) []todo {
+func delTodo(todos []todo, id int) []todo {
 	for index, todo := range todos {
 		if id == todo.Id {
-			todos = append(todos[:index], todos[index+1:]...)
+			todos = append(todos[:index], todos[1+index:]...)
 		}
 
 	}
