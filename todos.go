@@ -37,3 +37,14 @@ func saveTodos(todos []todo) {
 		panic(err)
 	}
 }
+
+func delTodo(todos []todo, id string) []todo {
+	for index, todo := range todos {
+		if id == todo.Id {
+			todos = append(todos[:index], todos[index+1:]...)
+		}
+
+	}
+
+	return todos
+}

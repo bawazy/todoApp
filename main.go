@@ -19,6 +19,11 @@ func main() {
 	addTask := addCmd.String("task", "", "Todo Task (desc)")
 	addComp := addCmd.String("completed", "", "Todo Completion")
 
+	//delete subcommand
+	delCmd := flag.NewFlagSet("del", flag.ExitOnError)
+	// input for delete command
+	delID := delCmd.String("id", "", "Todo ID")
+
 	// Validation to read what was passed and to make sure that the accurate argument has been passed into our application
 	if len(os.Args) < 2 {
 		fmt.Println("Expected 'get' or 'add' subcommands")
@@ -33,6 +38,9 @@ func main() {
 	case "add":
 		// if it is the 'add' command, we call the handleAdd here
 		HandleAdd(addCmd, addId, addTask, addComp)
+	case "del":
+		//if it is the 'delete' command we call the handleDel  function here
+		handleDel(delCmd, delID)
 	default: // if we dont understand the input
 	}
 
@@ -77,6 +85,26 @@ func ValidateTodo(addCmd *flag.FlagSet, id *string, task *string, completed *str
 		addCmd.PrintDefaults()
 		os.Exit(1)
 	}
+}
+
+func ValidateDel(addCmd *flag.FlagSet, id *string, task *string, completed *string) {
+	addCmd.Parse(os.Args[2:])
+	if *id == "" {
+		fmt.Print("An ID is required a delete a todo \n")
+		addCmd.PrintDefaults()
+		os.Exit(1)
+	}
+}
+func handleDel(delCmd *flag.FlagSet, id *string) {
+	ValidateDel(delCmd, id, nil, nil)
+
+	if *id != "" {
+		todos := getTodos()
+		id := *id
+		delTodo(todos, id)
+		saveTodos(todos)
+	}
+
 }
 
 func HandleAdd(addCmd *flag.FlagSet, id *string, task *string, completed *string) {
