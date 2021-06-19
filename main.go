@@ -102,8 +102,8 @@ func handleDel(delCmd *flag.FlagSet, id *int) {
 		todos := getTodos()
 		id := *id
 		// fmt.Println(id)
-		delTodo(todos, id)
-		saveTodos(todos)
+		updated := delTodo(todos, id)
+		saveTodos(updated)
 	}
 
 }
