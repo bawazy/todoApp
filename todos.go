@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -43,7 +44,7 @@ func delTodo(todos []todo, id int) []todo {
 		if id == todo.Id {
 			todos = append(todos[:index], todos[1+index:]...)
 		}
-
+		fmt.Print(todos)
 	}
 
 	return todos
