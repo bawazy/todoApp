@@ -11,9 +11,9 @@ func main() {
 	getCmd := flag.NewFlagSet("get", flag.ExitOnError)
 	getAll := getCmd.Bool("all", false, "Get all Todos")
 	getID := getCmd.Int("id", 0, "Todo ID")
+
 	// todo add subcommand
 	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
-
 	//input for todo add command
 	addId := addCmd.Int("id", 0, "Todo ID")
 	addTask := addCmd.String("task", "", "Todo Task (desc)")
@@ -24,9 +24,15 @@ func main() {
 	// input for delete command
 	delID := delCmd.Int("id", 0, "Todo ID")
 
+	//update completed subcommand
+	update := flag.NewFlagSet("update", flag.ExitOnError)
+	updId := update.Int("id", 0, "Todo ID")
+	updTask := update.String("task", "", "Todo Task")
+	updCompleted := update.String("completed", "", "Todo Completed")
+
 	// Validation to read what was passed and to make sure that the accurate argument has been passed into our application
 	if len(os.Args) < 2 {
-		fmt.Println("Expected 'get' or 'add' subcommands")
+		fmt.Println("Expected 'get', 'del', 'update' or 'add' subcommands")
 		os.Exit(1)
 	}
 
@@ -41,6 +47,9 @@ func main() {
 	case "del":
 		//if it is the 'delete' command we call the handleDel  function here
 		handleDel(delCmd, delID)
+	case "update":
+		//if we call the update subcommand
+		handleUpdate(update, updId, updTask, updCompleted)
 	default: // if we dont understand the input
 	}
 
@@ -95,6 +104,7 @@ func ValidateDel(addCmd *flag.FlagSet, id *int) {
 		os.Exit(1)
 	}
 }
+
 func handleDel(delCmd *flag.FlagSet, id *int) {
 	ValidateDel(delCmd, id)
 
@@ -121,5 +131,28 @@ func HandleAdd(addCmd *flag.FlagSet, id *int, task *string, completed *string) {
 
 	todos = append(todos, todo)
 	saveTodos(todos)
+
+}
+
+func ValidateUpdate(update *flag.FlagSet, id *int, task *string, completed *string) {
+	update.Parse(os.Args[2:])
+
+	if *id == 0 && *completed == "" || *id == 0 && *task == "" {
+		fmt.Print("You need to provide a Valid Todo ID and a field to Update ")
+		update.PrintDefaults()
+		os.Exit(1)
+	}
+}
+
+func handleUpdate(update *flag.FlagSet, id *int, task *string, completed *string) {
+	ValidateUpdate(update, id, task, completed)
+	todos := getTodos()
+	if *id != 0 && *task != "" || *completed != "" {
+		Id := *id
+		task := *task
+		completed := *completed
+		new := upddated(todos, Id, completed, task)
+		saveTodos(new)
+	}
 
 }

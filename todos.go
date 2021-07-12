@@ -48,3 +48,27 @@ func delTodo(todos []todo, id int) []todo {
 
 	return todos
 }
+
+func upddated(todos []todo, id int, completed string, task string) []todo {
+
+	for index, todo := range todos {
+		if id == todo.Id {
+			todos = append(todos[:index], todos[1+index:]...)
+			if id == todo.Id && task != "" && completed != "" {
+				todo.Task = task
+				todo.Completed = completed
+				todos = append(todos, todo)
+			} else if id == todo.Id && task != "" {
+				todo.Task = task
+				todos = append(todos, todo)
+			} else if id == todo.Id && completed != "" {
+				todo.Completed = completed
+				todos = append(todos, todo)
+			}
+
+		}
+
+	}
+
+	return todos
+}
